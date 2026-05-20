@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClueGPT: The Whispering Waters of Bellacqua</title>
+  <style>
+    :root{
+      --navy:#061a33; --navy2:#0a2d55; --ink:#172033; --paper:#f8fafc; --paper2:#e9eff6;
+      --cream:#fbfdff; --blood:#9b123d; --red:#7a1820; --gold:#aeb7c2; --line:#263241;
+      --muted:#5f6b7a; --blue:#163f66; --shadow:rgba(0,0,0,.26);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0; color:var(--ink); font-family:"Courier New", Courier, monospace; line-height:1.55; overflow-x:hidden;
+      background:
+        radial-gradient(circle at 18% 8%, rgba(145,190,240,.24), transparent 25%),
+        radial-gradient(circle at 70% 0%, rgba(255,255,255,.08), transparent 24%),
+        linear-gradient(145deg, #06111f 0%, var(--navy) 45%, #07101d 100%);
+      min-height:100vh;
+    }
+    body:before{
+      content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.34;
+      background-image:
+        linear-gradient(110deg, transparent 0 48%, rgba(216,235,255,.72) 49%, transparent 50% 100%),
+        linear-gradient(110deg, transparent 0 54%, rgba(216,235,255,.42) 55%, transparent 56% 100%),
+        linear-gradient(110deg, transparent 0 62%, rgba(216,235,255,.26) 63%, transparent 64% 100%);
+      background-size:72px 72px, 106px 106px, 150px 150px;
+      animation:rain .23s linear infinite;
+    }
+    body:after{
+      content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+      background:linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.48));
+    }
+    @keyframes rain{to{background-position:-72px 72px,-106px 106px,-150px 150px}}
+    .wrap{position:relative; z-index:1; width:min(1180px,calc(100% - 28px)); margin:auto; padding:26px 0 60px}
+    .case{background:var(--paper2); border-radius:18px; overflow:hidden; box-shadow:0 26px 90px rgba(0,0,0,.48); border:1px solid rgba(255,255,255,.32)}
+    header{background:linear-gradient(135deg, rgba(6,26,51,.98), rgba(10,45,85,.94)); color:var(--paper); padding:32px; border-bottom:5px double rgba(248,250,252,.42); position:relative; overflow:hidden}
+    header:after{content:"BLACKTHORN MANOR"; position:absolute; right:-18px; bottom:-22px; color:rgba(255,255,255,.05); font-weight:900; font-size:clamp(48px,9vw,112px); white-space:nowrap; letter-spacing:.08em}
+    .kicker{display:inline-block; border:1px solid rgba(243,218,168,.7); color:#c8d0d8; border-radius:999px; padding:5px 10px; font-size:13px; font-weight:900; letter-spacing:.08em; text-transform:uppercase; margin-bottom:16px; position:relative; z-index:1; background:rgba(0,0,0,.16)}
+    h1{font-size:clamp(40px,7vw,86px); line-height:.95; letter-spacing:-.055em; text-transform:uppercase; margin:0; max-width:900px; position:relative; z-index:1}
+    main{padding:26px; position:relative; z-index:1}
+    h2,h3,p{margin-top:0}
+    .topbar{display:grid; grid-template-columns:1fr auto; gap:16px; margin-bottom:22px; align-items:stretch}
+    .box,.section,.timer,.solution,.music{background:rgba(251,253,255,.96); border:1px solid rgba(38,50,65,.2); border-radius:14px; box-shadow:0 8px 20px rgba(38,50,65,.08); padding:20px}
+    .notice{border-left:8px solid var(--blood); font-size:17px}
+    .timer{min-width:210px; text-align:center; border:2px solid rgba(174,183,194,.45)}
+    .board .timer{margin:0 auto 14px; max-width:240px; padding:14px 16px; background:#f8fafc}
+    .music{display:flex; align-items:center; justify-content:space-between; gap:14px; min-width:285px; border:2px solid rgba(174,183,194,.45)}
+    .music-main{display:flex; flex-direction:column; gap:4px}
+    .music-title{font-size:12px; text-transform:uppercase; letter-spacing:.1em; color:var(--red); font-weight:900}
+    .music-hint{font-size:12px; color:var(--muted)}
+    .music button{padding:10px 12px; border:2px solid #111; background:var(--paper); color:var(--ink); font-weight:900; cursor:pointer; box-shadow:3px 3px 0 var(--blue)}
+    .volume{display:flex; align-items:center; gap:8px; font-size:12px; font-weight:900; color:var(--red); white-space:nowrap}
+    .volume input{width:92px; accent-color:var(--blood)}
+    .timer-label{font-size:12px; text-transform:uppercase; letter-spacing:.1em; color:var(--red); font-weight:900}
+    #timer{display:block; font-size:42px; line-height:1; font-weight:900; color:var(--navy)}
+    button,select{font-family:inherit; font-size:16px; border-radius:10px}
+    .scene{display:grid; grid-template-columns:1.05fr .95fr; gap:20px; margin-bottom:22px}
+    .story{font-size:17px}
+    .detective{background:linear-gradient(135deg, rgba(155,18,61,.08), rgba(174,183,194,.08)), var(--cream)}
+    .detective strong{color:var(--red)}
+    details.section{padding:0; overflow:hidden; margin-bottom:18px}
+    details.section > summary{list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:18px 20px; background:rgba(248,250,252,.82); border-bottom:1px solid rgba(38,50,65,.14)}
+    details.section > summary::-webkit-details-marker{display:none}
+    .summary-title{margin:0; font-size:24px; text-transform:uppercase; letter-spacing:-.03em}
+    .chev{font-size:34px; color:var(--blood); transform:rotate(90deg); transition:.18s}
+    details:not([open]) .chev{transform:rotate(0deg)}
+    .section-body{padding:20px}
+    .section-intro{color:var(--muted); margin-bottom:16px}
+    .card-grid{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px}
+    details.card{border:2px solid rgba(38,50,65,.78); border-radius:12px; background:#f5f8fc; min-height:172px; box-shadow:5px 5px 0 var(--blue); overflow:hidden}
+    details.card > summary{list-style:none; cursor:pointer; padding:16px; min-height:172px; display:flex; flex-direction:column; gap:6px; justify-content:center; align-items:center; text-align:center}
+    details.card > summary::-webkit-details-marker{display:none}
+    details.card[open] > summary{min-height:112px; border-bottom:1px dashed rgba(38,50,65,.35); background:#eef4fb}
+    .emoji{font-size:42px; line-height:1}
+    .type{font-size:11px; color:var(--red); text-transform:uppercase; letter-spacing:.11em; font-weight:900}
+    .card h3{margin:0; font-size:20px; line-height:1.05; color:var(--red); text-transform:uppercase; letter-spacing:-.04em}
+    .front-note{font-size:13px; color:var(--muted); margin:4px 0 0}
+    .tap{display:inline-block; margin-top:6px; font-size:11px; font-weight:900; color:var(--blood); text-transform:uppercase; letter-spacing:.08em}
+    .card-detail{padding:14px 16px 18px; font-size:14px}
+    .quote{border-left:4px solid var(--gold); padding-left:10px; font-style:italic; color:#3a4554; margin:10px 0 0}
+    .traits{margin:12px 0 0; padding-top:10px; border-top:2px dotted rgba(38,50,65,.28); color:var(--navy); font-weight:900; font-size:13px; text-transform:uppercase; letter-spacing:.03em; text-align:center}
+    .traits span{white-space:nowrap}
+    .clue-board{display:grid; grid-template-columns:minmax(0,.95fr) minmax(420px,1.05fr); gap:18px; align-items:start}
+    .clues{background:#f8fafc; border:3px solid #111; border-radius:14px; padding:24px 26px 24px 42px; box-shadow:5px 5px 0 var(--blue); margin:0; font-size:15px}
+    .clues li{margin:0 0 12px; cursor:pointer; padding:4px 6px; border-radius:8px; transition:.15s}
+    .clues li:hover{background:rgba(155,18,61,.08)}
+    .clues li.used{text-decoration:line-through; opacity:.55; background:rgba(38,50,65,.08)}
+    .clue-hint{font-size:12px; color:var(--muted); margin:0 0 10px 0; font-weight:900; text-transform:uppercase; letter-spacing:.06em}
+    .board{background:#fbfdff; border:1px solid rgba(38,50,65,.2); border-radius:14px; padding:18px; overflow:auto}
+    .board-title{text-align:center; font-size:22px; font-weight:900; text-transform:uppercase; color:var(--red); margin-bottom:10px}
+    .deduction{--label:92px; --cell:42px; display:grid; grid-template-columns:var(--label) repeat(6,var(--cell)); grid-template-rows:28px 34px repeat(3,var(--cell)) repeat(3,var(--cell)); width:max-content; margin:0 auto; color:#000}
+    .group{font-size:11px; text-transform:uppercase; letter-spacing:.09em; color:#9a9286; font-weight:900; align-self:end; justify-self:center}
+    .g-sus{grid-column:2/span 3; grid-row:1}.g-loc{grid-column:5/span 3; grid-row:1}
+    .topicon,.sideicon{display:flex; align-items:center; justify-content:center; font-size:22px; line-height:1}
+    .topicon{grid-row:2}.sideicon{grid-column:1; justify-content:flex-end; padding-right:12px}
+    .sidegroup{writing-mode:vertical-rl; transform:rotate(180deg); font-size:11px; text-transform:uppercase; letter-spacing:.09em; color:#9a9286; font-weight:900; align-self:center; justify-self:center; grid-column:1}
+    .sg-method{grid-row:3/span 3}.sg-loc{grid-row:6/span 3}
+    .cell{width:var(--cell); height:var(--cell); border:1px solid #111; background:#f8fafc; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:20px; font-weight:900; user-select:none; padding:0}
+    .cell.block-r{border-right:4px solid #111}.cell.block-l{border-left:4px solid #111}.cell.block-t{border-top:4px solid #111}.cell.block-b{border-bottom:4px solid #111}
+    .cell[data-state="x"]{color:#b42323}.cell[data-state="x"].auto-marked{color:#6f49c9}.cell[data-state="check"]{color:#1f6842}
+    .legend{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:14px; font-size:12px}
+    .legend div{background:#f8fafc; border:1px solid rgba(38,50,65,.18); border-radius:10px; padding:8px 10px}
+    .legend strong{color:var(--red)}
+    .legend ul{margin:6px 0 0 18px; padding:0}
+    .legend li{margin:2px 0}
+    .board-help{font-size:12px; color:#65717f; margin:12px 0 0; text-align:center}.board-actions{display:flex; justify-content:center; margin-top:10px}.mini-btn{padding:9px 12px; border:2px solid #111; background:#f8fafc; color:var(--ink); font-weight:900; text-transform:uppercase; box-shadow:3px 3px 0 var(--blue); cursor:pointer}.mini-btn:hover{filter:brightness(1.04)}
+    .accusation{background:linear-gradient(135deg,rgba(155,18,61,.08),rgba(174,183,194,.08)),var(--cream)}
+    .form-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:12px}
+    label{display:block; color:var(--red); font-weight:900; margin-bottom:7px}
+    select{width:100%; padding:13px; border:2px solid rgba(38,50,65,.45); background:white; color:var(--ink)}
+    .primary{margin-top:16px; width:100%; padding:15px 18px; border:2px solid #111; background:var(--blood); color:white; font-weight:900; text-transform:uppercase; box-shadow:4px 4px 0 var(--blue); cursor:pointer}
+    .primary:hover{filter:brightness(1.06)}
+    .result{display:none; margin-top:14px; padding:14px; border-radius:10px; font-weight:900}.result.show{display:block}.result.good{background:#e5f2e9; border:1px solid #1f6842; color:#174b30}.result.bad{background:#f7e1e1; border:1px solid #8c2d2d; color:#642020}
+    .share-box{display:none; margin-top:14px; padding:14px; background:#f8fafc; border:1px dashed rgba(38,50,65,.45); border-left:7px solid var(--blood); border-radius:10px}
+    .share-box.show{display:block}
+    .share-copy-only{display:none}
+    .tier-result{margin:10px 0 12px; padding:12px; border-radius:10px; background:#eaf2fb; border:1px solid rgba(22,63,102,.35)}
+    .tier-result h3{margin:0 0 6px; font-size:1.15rem; color:var(--navy2); text-transform:uppercase; letter-spacing:.04em}
+    .tier-result p{margin:4px 0}
+    .tier-time{font-weight:900}
+    .copy-btn{margin-top:10px; width:auto; padding:11px 14px; border:2px solid #111; background:var(--navy); color:white; font-weight:900; text-transform:uppercase; box-shadow:3px 3px 0 var(--blue); cursor:pointer}
+    #solution{display:none; margin-top:18px; border:3px solid #111; box-shadow:5px 5px 0 var(--blue)}
+    .prompt-box{background:#f8fafc; border:1px dashed rgba(38,50,65,.45); border-left:7px solid var(--blood); padding:14px; border-radius:10px; margin:10px 0 16px}
+    .footer-note{text-align:center; color:#e9eff6; font-size:13px; margin:18px 0 0}
+    @media(max-width:980px){.topbar,.scene,.clue-board,.form-grid{grid-template-columns:1fr}.timer,.music{min-width:0}.music{align-items:flex-start; flex-direction:column}.card-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:660px){main,header{padding:20px}.card-grid{grid-template-columns:1fr}.deduction{--label:72px;--cell:36px}.legend{grid-template-columns:1fr}.topicon,.sideicon{font-size:18px}.sideicon{padding-right:8px}.clues{padding-left:34px}}
+
+    .start-screen{
+      position:fixed; inset:0; z-index:9999; cursor:pointer; overflow:hidden; background:#06111f;
+      display:flex; align-items:center; justify-content:center; isolation:isolate; padding:clamp(10px, 2vw, 24px);
+    }
+    .start-screen img{
+      width:100%; height:100%; object-fit:contain; display:block; user-select:none; -webkit-user-drag:none;
+      filter:drop-shadow(0 18px 45px rgba(0,0,0,.55));
+    }
+    .start-screen:after{
+      content:""; position:absolute; inset:0; pointer-events:none;
+      background:radial-gradient(circle at center, rgba(0,0,0,0) 52%, rgba(0,0,0,.32) 100%),
+                 linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,.58) 100%);
+    }
+    .start-prompt{
+      position:absolute; left:50%; bottom:28px; transform:translateX(-50%); z-index:2;
+      color:#f8fafc; background:rgba(5,13,25,.72); border:2px solid rgba(243,218,168,.75);
+      border-radius:999px; padding:12px 20px; font-weight:900; text-transform:uppercase; letter-spacing:.08em;
+      box-shadow:0 10px 30px rgba(0,0,0,.45); text-align:center; font-size:clamp(13px,2vw,17px);
+      animation:pulsePrompt 1.4s ease-in-out infinite;
+    }
+    @keyframes pulsePrompt{0%,100%{transform:translateX(-50%) scale(1); opacity:.92}50%{transform:translateX(-50%) scale(1.035); opacity:1}}
+    .start-screen.hidden{opacity:0; visibility:hidden; pointer-events:none; transition:opacity .45s ease, visibility .45s ease}
+    body.not-started .wrap{filter:blur(2px)}
+
+
+    /* Cool-toned v15 palette refinements */
+    .kicker{
+      border-color:rgba(190,199,211,.86);
+      color:#d7dde6;
+      background:rgba(6,26,51,.32);
+    }
+    .notice{
+      border-left-color:#334155;
+    }
+    .music{
+      border-color:rgba(22,63,102,.38);
+    }
+    .music-title,
+    .volume,
+    .timer-label,
+    .type,
+    .card h3,
+    .tap,
+    label,
+    .legend strong{
+      color:var(--navy2);
+    }
+    .volume input{
+      accent-color:var(--navy2);
+    }
+    .chev{
+      color:var(--navy2);
+    }
+    .detective,
+    .accusation{
+      background:linear-gradient(135deg, rgba(22,63,102,.10), rgba(174,183,194,.12)), var(--cream);
+    }
+    .detective strong{
+      color:var(--navy2);
+    }
+    .clues li:hover{
+      background:rgba(22,63,102,.08);
+    }
+    .board-title{
+      color:#263241;
+    }
+    .share-box{
+      border-left-color:var(--navy2);
+    }
+    .tier-result{
+      border-left:7px solid var(--navy2);
+    }
+    .prompt-box{
+      border-left-color:var(--navy2);
+    }
+    .start-prompt{
+      border-color:rgba(190,199,211,.82);
+    }
+
+    /* Notebook-style episode layout */
+    body{
+      background-color:#eef2f5;
+      background-image:
+        linear-gradient(90deg, rgba(124,43,55,.16) 0 2px, transparent 2px),
+        repeating-linear-gradient(0deg, transparent 0 31px, rgba(37,99,146,.18) 32px, transparent 33px),
+        linear-gradient(135deg, #f8fafc 0%, #e7edf4 100%);
+      background-size:100% 100%, 100% 33px, 100% 100%;
+      background-position:78px 0, 0 0, 0 0;
+    }
+    body:before, body:after{display:none !important;}
+    .wrap{padding:22px 0 54px;}
+    .case{
+      background:rgba(255,255,255,.86);
+      border:2px solid rgba(38,50,65,.18);
+      border-radius:22px;
+      box-shadow:0 18px 60px rgba(38,50,65,.18);
+      overflow:hidden;
+    }
+    header.episode-header{
+      background:
+        linear-gradient(90deg, rgba(22,63,102,.08), rgba(255,255,255,.9)),
+        #fbfdff;
+      color:var(--ink);
+      padding:26px 30px 22px;
+      border-bottom:3px solid rgba(38,50,65,.18);
+      position:relative;
+      overflow:hidden;
+    }
+    header.episode-header:before{
+      content:"";
+      position:absolute; inset:0; opacity:.34; pointer-events:none;
+      background:
+        radial-gradient(circle at 24px 24px, rgba(38,50,65,.18) 0 2px, transparent 3px),
+        repeating-linear-gradient(0deg, transparent 0 31px, rgba(37,99,146,.12) 32px, transparent 33px);
+      background-size:36px 36px, 100% 33px;
+    }
+    header.episode-header:after{display:none;}
+    .logo-row{position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:12px;}
+    .episode-logo{display:block; width:min(260px, 58vw); height:auto; filter:drop-shadow(0 5px 0 rgba(22,63,102,.12));}
+    header.episode-header .kicker{margin:0; border-color:rgba(38,50,65,.28); color:#263241; background:#fff7bc; box-shadow:3px 3px 0 rgba(38,50,65,.18); transform:rotate(1deg);}
+    header.episode-header h1{
+      color:#172033;
+      text-shadow:none;
+      font-size:clamp(34px,5.4vw,72px);
+    }
+    main{background:rgba(248,250,252,.72);}
+    .topbar{display:flex; justify-content:flex-end; margin-bottom:18px;}
+    .box,.section,.timer,.solution,.music{background:rgba(255,255,255,.94);}
+    .section, details.card, .clues, .board, .accusation, .solution{box-shadow:5px 5px 0 rgba(22,63,102,.22);}
+    .footer-note{color:#5f6b7a;}
+    @media(max-width:660px){.logo-row{align-items:flex-start; flex-direction:column}.episode-logo{width:min(240px, 78vw)} header.episode-header .kicker{align-self:flex-start}}
+
+  
+
+    /* Episode v19: notebook sticky-note header refinements */
+    :root{
+      --note-yellow:#fff3a8;
+      --note-blue:#cfe8ff;
+      --note-pink:#ffd7e7;
+      --note-green:#dff5dc;
+      --cool-pencil:#3d4a5c;
+    }
+    header.episode-header{
+      padding:24px 30px 30px;
+    }
+    .logo-row{
+      margin-bottom:18px;
+    }
+    header.episode-header .kicker{
+      color:#1f2a3a;
+      background:var(--note-yellow);
+      border:2px solid rgba(38,50,65,.24);
+      box-shadow:4px 4px 0 rgba(38,50,65,.18);
+      transform:rotate(1.25deg);
+    }
+    header.episode-header h1{
+      display:inline-block;
+      max-width:min(920px,100%);
+      margin:4px 0 0;
+      padding:18px 24px 16px;
+      background:linear-gradient(135deg, #fff8bd 0%, var(--note-yellow) 100%);
+      border:2px solid rgba(38,50,65,.32);
+      border-radius:4px 18px 5px 14px;
+      box-shadow:8px 8px 0 rgba(22,63,102,.18);
+      transform:rotate(-.7deg);
+      color:#172033;
+      font-size:clamp(36px,6vw,78px);
+      letter-spacing:-.055em;
+      line-height:.94;
+    }
+    header.episode-header h1:before{
+      content:"";
+      position:absolute;
+      top:-12px;
+      left:50%;
+      transform:translateX(-50%) rotate(2deg);
+      width:92px;
+      height:24px;
+      background:rgba(190,199,211,.5);
+      border:1px solid rgba(38,50,65,.12);
+      box-shadow:0 2px 4px rgba(38,50,65,.12);
+    }
+    details.section:nth-of-type(1) > summary{background:linear-gradient(135deg, rgba(207,232,255,.8), rgba(255,255,255,.92));}
+    details.section:nth-of-type(2) > summary{background:linear-gradient(135deg, rgba(255,215,231,.7), rgba(255,255,255,.92));}
+    details.section:nth-of-type(3) > summary{background:linear-gradient(135deg, rgba(255,243,168,.68), rgba(255,255,255,.92));}
+    details.section:nth-of-type(4) > summary{background:linear-gradient(135deg, rgba(223,245,220,.74), rgba(255,255,255,.92));}
+    .box,.section,.timer,.solution,.music,.board,.accusation{
+      border-color:rgba(38,50,65,.22);
+    }
+    .primary{
+      background:#163f66;
+      box-shadow:4px 4px 0 rgba(38,50,65,.24);
+    }
+    .share-box,.prompt-box{
+      border-left-color:#163f66;
+    }
+
+    .case-file-kicker{
+      display:inline-block;
+      width:max-content;
+      padding:7px 12px;
+      border:2px solid rgba(61,74,92,.36);
+      border-radius:4px;
+      background:rgba(255,255,255,.36);
+      color:#263241 !important;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+      box-shadow:3px 3px 0 rgba(61,74,92,.14);
+      transform:rotate(-.7deg);
+    }
+    @media(max-width:660px){
+      header.episode-header h1{padding:16px 18px 14px;}
+    }
+
+
+    /* Episode v20: notebook sticky-note content layout */
+    header.episode-header h1{display:none !important;}
+    header.episode-header{padding-bottom:22px;}
+    .topbar{
+      display:grid !important;
+      grid-template-columns:minmax(0,1fr) auto;
+      gap:18px;
+      align-items:stretch;
+      margin-bottom:20px;
+    }
+    .case-title-note{
+      position:relative;
+      align-self:stretch;
+      min-height:142px;
+      display:flex;
+      align-items:center;
+      padding:20px 28px;
+      background:linear-gradient(135deg,#fff8b8 0%, #fff1a2 100%);
+      border:2px solid rgba(38,50,65,.28);
+      border-radius:4px 18px 5px 14px;
+      box-shadow:8px 8px 0 rgba(22,63,102,.16);
+      transform:rotate(-.45deg);
+    }
+    .case-title-note:before{
+      content:"";
+      position:absolute;
+      top:-13px;
+      left:46%;
+      width:92px;
+      height:24px;
+      background:rgba(190,199,211,.5);
+      border:1px solid rgba(38,50,65,.12);
+      box-shadow:0 2px 4px rgba(38,50,65,.12);
+      transform:rotate(2deg);
+    }
+    .case-title-note h1{
+      margin:0;
+      color:#172033;
+      font-size:clamp(36px,5.8vw,74px);
+      line-height:.95;
+      letter-spacing:-.055em;
+      text-transform:uppercase;
+    }
+    .music{
+      background:linear-gradient(135deg,#d6ecff 0%,#f9fcff 100%) !important;
+      border-color:rgba(38,50,65,.22) !important;
+      box-shadow:5px 5px 0 rgba(22,63,102,.18) !important;
+    }
+    .music-title,.volume{color:#163f66 !important;}
+    .volume input{accent-color:#163f66 !important;}
+    .scene{align-items:stretch;}
+    .scene .story,.scene .detective{
+      position:relative;
+      border:2px solid rgba(38,50,65,.22);
+      border-radius:8px 20px 7px 16px;
+      box-shadow:7px 7px 0 rgba(38,50,65,.12);
+      transform:rotate(.25deg);
+    }
+    .scene .story{
+      background:linear-gradient(135deg,#fff8bd 0%,#fff3a8 100%) !important;
+    }
+    .scene .detective{
+      background:linear-gradient(135deg,#ffd7e7 0%,#fff8fb 100%) !important;
+      transform:rotate(-.2deg);
+    }
+    .scene .story:before,.scene .detective:before{
+      content:"";
+      position:absolute;
+      top:-12px;
+      left:50%;
+      width:78px;
+      height:22px;
+      background:rgba(190,199,211,.45);
+      border:1px solid rgba(38,50,65,.1);
+      box-shadow:0 2px 4px rgba(38,50,65,.1);
+      transform:translateX(-50%) rotate(-2deg);
+    }
+    .detective h2{color:#163f66;}
+    .detective strong{color:#174b30 !important;}
+    .box.story p:last-child,.detective p:last-child{margin-bottom:0;}
+    @media(max-width:900px){
+      .topbar{grid-template-columns:1fr;}
+      .music{min-width:0;}
+      .case-title-note{min-height:auto;}
+    }
+
+  
+
+    /* Episode v21: brighter notebook/sticky-note palette tweaks */
+    .case-title-note{
+      background:linear-gradient(135deg,#dff5dc 0%,#c9f0c6 100%) !important;
+      box-shadow:8px 8px 0 rgba(38,50,65,.16) !important;
+    }
+    .case-title-note h1{
+      font-size:clamp(30px,4.7vw,60px) !important;
+      line-height:1 !important;
+      letter-spacing:-.045em !important;
+    }
+    main{
+      background:
+        radial-gradient(circle at 18px 18px, rgba(38,50,65,.10) 0 2px, transparent 3px),
+        repeating-linear-gradient(0deg, transparent 0 31px, rgba(37,99,146,.10) 32px, transparent 33px),
+        linear-gradient(180deg,rgba(255,255,255,.78),rgba(248,250,252,.86)) !important;
+      background-size:36px 36px, 100% 33px, 100% 100% !important;
+    }
+    .section{
+      background:rgba(255,255,255,.86) !important;
+    }
+    details.section:nth-of-type(1) > summary,
+    details.section:nth-of-type(5) > summary{
+      background:linear-gradient(135deg, rgba(207,232,255,.95), rgba(255,255,255,.92)) !important;
+    }
+    details.section:nth-of-type(2) > summary{
+      background:linear-gradient(135deg, rgba(255,215,231,.92), rgba(255,255,255,.92)) !important;
+    }
+    details.section:nth-of-type(3) > summary{
+      background:linear-gradient(135deg, rgba(255,243,168,.95), rgba(255,255,255,.92)) !important;
+    }
+    .card-grid details.card:nth-child(4n+1){background:linear-gradient(135deg,#fff7bd 0%,#fffef4 100%) !important; box-shadow:5px 5px 0 rgba(255,190,80,.42) !important;}
+    .card-grid details.card:nth-child(4n+2){background:linear-gradient(135deg,#cfe8ff 0%,#f7fbff 100%) !important; box-shadow:5px 5px 0 rgba(91,154,204,.32) !important;}
+    .card-grid details.card:nth-child(4n+3){background:linear-gradient(135deg,#ffd7e7 0%,#fff9fc 100%) !important; box-shadow:5px 5px 0 rgba(215,105,150,.28) !important;}
+    .card-grid details.card:nth-child(4n+4){background:linear-gradient(135deg,#dff5dc 0%,#fbfffa 100%) !important; box-shadow:5px 5px 0 rgba(111,170,111,.28) !important;}
+    details.card[open] > summary{background:rgba(255,255,255,.55) !important;}
+    .clues{
+      background:linear-gradient(135deg,#fff8bd 0%,#fffef4 100%) !important;
+      box-shadow:5px 5px 0 rgba(255,190,80,.36) !important;
+    }
+    .board{
+      background:linear-gradient(135deg,#cfe8ff 0%,#f9fcff 100%) !important;
+      box-shadow:5px 5px 0 rgba(91,154,204,.30) !important;
+    }
+    .accusation{
+      background:linear-gradient(135deg,#ffd7e7 0%,#fff8bd 100%) !important;
+      box-shadow:6px 6px 0 rgba(215,105,150,.26) !important;
+      border-color:rgba(38,50,65,.24) !important;
+    }
+    .accusation h2{color:#172033 !important;}
+    .primary{
+      background:#fff3a8 !important;
+      color:#172033 !important;
+      box-shadow:4px 4px 0 rgba(215,105,150,.45) !important;
+    }
+    .primary:hover{filter:brightness(1.02) saturate(1.05) !important;}
+    #solution{
+      background:linear-gradient(135deg,#dff5dc 0%,#fbfffa 100%) !important;
+      box-shadow:5px 5px 0 rgba(111,170,111,.28) !important;
+    }
+    .prompt-box{background:#fffef4 !important; border-left-color:#6f9f6f !important;}
+    .share-box{background:#f7fbff !important; border-left-color:#5b9acc !important;}
+    .tier-result{background:#e9f7ed !important; border-color:rgba(31,104,66,.34) !important;}
+
+
+    /* Episode v22: polish pass - navigation, footer move, extra color */
+    .case{
+      border:2px solid rgba(38,50,65,.16) !important;
+      box-shadow:0 16px 44px rgba(38,50,65,.16) !important;
+    }
+    .footer-note{display:none !important;}
+    .scene .story{
+      background:linear-gradient(135deg,#fff7b8 0%,#fffcee 100%) !important;
+      box-shadow:8px 8px 0 rgba(255,190,80,.30) !important;
+    }
+    .scene .detective{
+      background:linear-gradient(135deg,#cfe8ff 0%,#f7fbff 100%) !important;
+      box-shadow:8px 8px 0 rgba(91,154,204,.25) !important;
+    }
+    details.section:nth-of-type(4) > summary{
+      background:linear-gradient(135deg, rgba(223,245,220,.95), rgba(255,255,255,.92)) !important;
+    }
+    .pre-accuse-actions{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin:16px 0 18px;
+      padding:14px 16px;
+      border:2px dashed rgba(38,50,65,.24);
+      border-radius:12px;
+      background:linear-gradient(135deg,#dff5dc 0%,#f9fff8 100%);
+      box-shadow:4px 4px 0 rgba(111,170,111,.22);
+    }
+    .pre-accuse-actions.hidden{display:none;}
+    .pre-accuse-actions p{margin:0; font-size:14px; color:#344154;}
+    .secondary-link{
+      display:inline-block;
+      text-decoration:none;
+      color:#172033;
+      font-weight:900;
+      border:2px solid #111;
+      background:#cfe8ff;
+      padding:10px 12px;
+      border-radius:10px;
+      box-shadow:3px 3px 0 rgba(91,154,204,.45);
+      white-space:nowrap;
+      text-transform:uppercase;
+      font-size:13px;
+    }
+    .secondary-link:hover{transform:translate(-1px,-1px); box-shadow:4px 4px 0 rgba(91,154,204,.45);}
+    .accusation .primary{
+      background:#dff5dc !important;
+      box-shadow:4px 4px 0 rgba(111,170,111,.32) !important;
+    }
+    .solution{
+      background:linear-gradient(135deg,#dff5dc 0%,#fff7b8 100%) !important;
+      box-shadow:7px 7px 0 rgba(111,170,111,.24) !important;
+    }
+    .prompt-box{
+      background:#f7fbff !important;
+      border-left-color:#5b9acc !important;
+    }
+
+
+    /* Episode v23: tidy case title and move menu link outside accusation */
+    .topbar{
+      grid-template-columns:minmax(0,1fr) 310px !important;
+      align-items:center !important;
+    }
+    .case-title-note{
+      min-height:98px !important;
+      padding:18px 24px !important;
+    }
+    .case-title-note h1{
+      white-space:nowrap !important;
+      font-size:clamp(22px,3.35vw,43px) !important;
+      line-height:1 !important;
+      letter-spacing:-.035em !important;
+    }
+    .music{
+      min-width:0 !important;
+      width:100%;
+    }
+    .menu-retreat-section{
+      margin:20px 0 22px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding:16px 18px;
+      border:2px dashed rgba(38,50,65,.24);
+      border-radius:10px 18px 8px 16px;
+      background:linear-gradient(135deg,#cfe8ff 0%,#fff8bd 100%);
+      box-shadow:5px 5px 0 rgba(91,154,204,.24);
+      transform:rotate(-.12deg);
+    }
+    .menu-retreat-section.hidden{display:none !important;}
+    .menu-retreat-section p{margin:0; color:#344154; font-size:14px;}
+    @media(max-width:900px){
+      .topbar{grid-template-columns:1fr !important;}
+      .case-title-note h1{white-space:normal !important;}
+    }
+
+
+    /* Episode v24: manila case-file surface instead of dotted paper */
+    .case{
+      position:relative !important;
+      background:#e9ddc9 !important;
+      border:2px solid rgba(95,77,51,.24) !important;
+      box-shadow:0 18px 48px rgba(70,58,42,.20) !important;
+    }
+    header.episode-header{
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.68), rgba(255,255,255,.24)),
+        linear-gradient(135deg,#efe4d1 0%, #f7f0e4 56%, #e5d7bd 100%) !important;
+      border-bottom:3px solid rgba(95,77,51,.20) !important;
+    }
+    header.episode-header:before{
+      opacity:.22 !important;
+      background:
+        repeating-linear-gradient(0deg, transparent 0 31px, rgba(95,77,51,.12) 32px, transparent 33px),
+        linear-gradient(90deg, rgba(95,77,51,.10) 0 1px, transparent 1px 100%) !important;
+      background-size:100% 33px, 100% 100% !important;
+    }
+    main{
+      position:relative !important;
+      background:
+        linear-gradient(90deg, rgba(122,101,69,.14) 0 1px, transparent 1px 100%),
+        linear-gradient(180deg, rgba(255,255,255,.24), rgba(255,255,255,.10)),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.10) 0 1px, transparent 1px 7px),
+        linear-gradient(135deg,#efe5d3 0%, #f8f1e6 48%, #e6d7be 100%) !important;
+      background-size:100% 100%, 100% 100%, 100% 8px, 100% 100% !important;
+      border-top:1px solid rgba(95,77,51,.12);
+    }
+    main > *{position:relative; z-index:1;}
+    .box,.section,.timer,.solution,.music,.board,.accusation{
+      border-color:rgba(95,77,51,.20) !important;
+    }
+    .section{
+      background:rgba(255,253,247,.88) !important;
+    }
+    .clues,.board,.accusation,.solution,.menu-retreat-section{
+      border-color:rgba(38,50,65,.28) !important;
+    }
+    .quote{border-left-color:rgba(61,74,92,.45) !important;}
+    @media(max-width:660px){
+    }
+
+
+    /* Episode v26: match ClueGPT hub notebook-on-desk background */
+    :root{
+      --desk:#9b693d;
+      --desk-dark:#6f4321;
+      --paper:#fffdf6;
+      --paper-line:#cbd8e6;
+      --paper-redline:#e7a0a0;
+      --paper-edge:#c7c2b6;
+    }
+    body{
+      background:
+        radial-gradient(circle at 12% 18%, rgba(255,255,255,.16), transparent 18%),
+        radial-gradient(circle at 88% 12%, rgba(255,255,255,.11), transparent 22%),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(var(--desk), var(--desk-dark)) !important;
+      background-size:auto, auto, 42px 42px, auto !important;
+      background-position:0 0, 0 0, 0 0, 0 0 !important;
+    }
+    body:before{
+      display:block !important;
+      content:"" !important;
+      position:fixed !important;
+      inset:0 !important;
+      pointer-events:none !important;
+      z-index:0 !important;
+      opacity:.26 !important;
+      background-image:
+        repeating-linear-gradient(12deg, rgba(43,25,10,.18) 0 2px, transparent 2px 22px),
+        repeating-linear-gradient(96deg, rgba(255,255,255,.08) 0 1px, transparent 1px 34px) !important;
+      background-size:auto !important;
+      animation:none !important;
+      mix-blend-mode:multiply !important;
+    }
+    body:after{display:none !important;}
+    .wrap{
+      width:min(1120px, calc(100% - 28px)) !important;
+      padding:28px 0 54px !important;
+    }
+    .case{
+      position:relative !important;
+      padding-left:48px !important;
+      border:2px solid var(--paper-edge) !important;
+      border-radius:16px !important;
+      background:
+        linear-gradient(90deg, transparent 0 54px, var(--paper-redline) 54px 56px, transparent 56px),
+        repeating-linear-gradient(0deg, var(--paper) 0 34px, var(--paper-line) 35px 36px),
+        var(--paper) !important;
+      box-shadow:0 24px 70px rgba(0,0,0,.35), 0 8px 0 rgba(0,0,0,.12) !important;
+      overflow:hidden !important;
+    }
+    .case:before{
+      content:"";
+      position:absolute;
+      top:18px;
+      bottom:18px;
+      left:14px;
+      width:22px;
+      background:radial-gradient(circle, #c7c2b6 0 7px, #6c6257 8px 9px, transparent 10px) 0 0 / 22px 44px repeat-y;
+      opacity:.9;
+      pointer-events:none;
+      z-index:0;
+    }
+    .case > *{position:relative; z-index:1;}
+    header.episode-header{
+      background:transparent !important;
+      border-bottom:2px solid rgba(199,194,182,.55) !important;
+      padding:24px 30px 22px !important;
+    }
+    header.episode-header:before, header.episode-header:after{display:none !important;}
+    main{
+      background:transparent !important;
+      border-top:0 !important;
+    }
+    .box,.section,.timer,.solution,.music,.board,.accusation{
+      border-color:rgba(38,50,65,.22) !important;
+    }
+    @media(max-width:660px){
+      .case{padding-left:34px !important;}
+      .case:before{left:8px;}
+    }
+
+
+    /* Sophia edit: keep bottom action containers inside the notebook width */
+    .menu-retreat-section,
+    .accusation{
+      max-width:980px !important;
+      margin-left:auto !important;
+      margin-right:auto !important;
+    }
+    .menu-retreat-section{
+      width:calc(100% - 24px) !important;
+    }
+    @media(max-width:900px){
+      .menu-retreat-section,
+      .accusation{
+        max-width:none !important;
+        width:100% !important;
+      }
+    }
+
+
+    /* Episode edit: wider 3-card rows */
+    .card-grid{grid-template-columns:repeat(3,minmax(0,1fr)) !important;}
+    @media(max-width:980px){.card-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}}
+    @media(max-width:660px){.card-grid{grid-template-columns:1fr !important;}}
+
+
+    /* Episode v27: ClueGPT assistant clue-unlock challenge */
+    .unlock-panel{
+      margin-bottom:18px;
+      padding:18px;
+      border:2px dashed rgba(38,50,65,.28);
+      border-radius:10px 18px 8px 16px;
+      background:linear-gradient(135deg,#dff5dc 0%,#fff8bd 100%);
+      box-shadow:5px 5px 0 rgba(111,170,111,.22);
+      transform:rotate(-.08deg);
+    }
+    .unlock-panel h3{margin:0 0 8px; color:#172033; text-transform:uppercase; letter-spacing:.03em;}
+    .unlock-panel p{margin:0 0 12px;}
+
+    .unlock-panel.collapsed .unlock-copy,
+    .unlock-panel.collapsed .challenge-grid{
+      display:none;
+    }
+    .unlock-complete{
+      display:none;
+      margin:8px 0 0 !important;
+      font-weight:900;
+      color:#174b30;
+    }
+    .unlock-panel.complete .unlock-complete{display:block;}
+    .unlock-toggle{
+      display:none;
+      margin-top:10px;
+      padding:9px 12px;
+      border:2px solid #111;
+      border-radius:10px;
+      background:#cfe8ff;
+      color:#172033;
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:3px 3px 0 rgba(91,154,204,.35);
+      text-transform:uppercase;
+      font-size:13px;
+    }
+    .unlock-panel.complete .unlock-toggle{display:inline-block;}
+    .challenge-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-top:14px;}
+    .challenge-card{
+      background:rgba(255,255,255,.78);
+      border:2px solid rgba(38,50,65,.22);
+      border-radius:12px;
+      padding:14px;
+      box-shadow:4px 4px 0 rgba(38,50,65,.12);
+    }
+    .challenge-card h4{margin:0 0 8px; color:#163f66; text-transform:uppercase;}
+    .challenge-card p{font-size:14px; margin:0 0 10px;}
+    .answer-list{display:grid; gap:8px;}
+    .answer-btn{
+      width:100%; text-align:left; padding:10px 11px;
+      border:2px solid #111; border-radius:10px;
+      background:#fbfdff; color:#172033; font-weight:700; cursor:pointer;
+      box-shadow:2px 2px 0 rgba(22,63,102,.22);
+    }
+    .answer-btn:hover:not(:disabled){transform:translate(-1px,-1px); box-shadow:3px 3px 0 rgba(22,63,102,.22);}
+    .answer-btn:disabled{cursor:not-allowed; opacity:.72;}
+    .answer-btn.correct-choice{background:#dff5dc;}
+    .answer-btn.wrong-choice{background:#ffd7e7;}
+    .challenge-status{margin-top:10px; font-size:13px; font-weight:900;}
+    .challenge-status.good{color:#174b30;}
+    .challenge-status.bad{color:#642020;}
+    .challenge-status.pending{color:#5f6b7a;}
+    .clues li.locked{
+      list-style-position:outside;
+      color:#65717f;
+      font-style:italic;
+      cursor:default;
+      background:rgba(38,50,65,.06);
+    }
+    .clues li.hard-locked{
+      color:#642020;
+      background:#f7e1e1;
+      text-decoration:none;
+      opacity:.9;
+      cursor:default;
+    }
+    .locked-label{font-weight:900; text-transform:uppercase; font-style:normal;}
+    @media(max-width:980px){.challenge-grid{grid-template-columns:1fr;}}
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <article class="case">
+      <header class="episode-header">
+        <div class="logo-row">
+          <img class="episode-logo" src="ClueGPT Logo.png" alt="ClueGPT" />
+          <div class="kicker case-file-kicker">CASE FILE 001 · Warm-Up</div>
+        </div>
+      </header>
+      <main>
+        <div class="topbar">
+          <div class="case-title-note" aria-label="Case title">
+            <h1>Who Stole the Silver Bell?</h1>
+          </div>
+          <div class="music" aria-label="Music controls">
+            <div class="music-main">
+              <div class="music-title">Festival Music</div>
+              <div class="music-hint">Detective ambience</div>
+              <div class="volume"><span>Volume</span><input id="volumeSlider" type="range" min="0" max="1" step="0.01" value="0.5" aria-label="Music volume"></div>
+            </div>
+            <button id="musicToggle" type="button" aria-pressed="false">Music On</button>
+          </div>
+        </div>
+
+        <div class="scene">
+          <section class="box story">
+             <p>Rain had not touched <strong>Bellacqua</strong> in weeks, yet the stones along the old harbor glistened as if the lake had crept ashore.</p>
+            <p>Detective Cluewell arrived by boat just after dusk, their black coat stirring in the warm wind. Above them, the town climbed the hillside in crooked layers: shuttered windows, iron balconies, lemon trees, and one chapel tower that should have been ringing.</p>
+            <p>But the bell never sounded.</p>
+          </section>
+          <section class="box detective">
+            <h2>Detective Cluewell</h2>
+            <p>The annual Festival of Saint Aurelia cannot begin without the <strong>Saint's Silver Bell</strong>. At midnight, the priest pulled the velvet cord. No sound came.</p>
+            <p>The bell was gone.</p>
+            <p>Detective Cluewell looked across the water and said, “Someone here has mistaken silence for innocence.”</p>
+          </section>
+        </div>
+
+        <details class="section">
+          <summary><h2 class="summary-title">The Suspects</h2><span class="chev">›</span></summary>
+          <div class="section-body">
+            <p class="section-intro">Click each card to inspect the suspect.</p>
+             <div class="card-grid">
+              <details class="card"><summary><div class="emoji">🎭</div><div class="type">Suspect</div><h3>Signora Violetta Vale</h3><p class="front-note">Festival planner. Professional atmosphere manufacturer.</p><span class="tap">Tap to inspect</span></summary><div class="card-detail"><p>A dramatic festival planner with a velvet shawl, a perfect smile, and the unsettling ability to know everyone's business before they do.</p><p class="quote">“Bellacqua does not need truth. It needs atmosphere.”</p><p class="traits"><span>Hair: Black</span> · <span>Eyes: Green</span> · <span>Height: 178 cm</span></p></div></details>
+              <details class="card"><summary><div class="emoji">🎻</div><div class="type">Suspect</div><h3>Matteo Marlowe</h3><p class="front-note">Violinist. Sad song enthusiast. Suspicious listener.</p><span class="tap">Tap to inspect</span></summary><div class="card-detail"><p>A melancholy violinist who plays on the bridge at sunset and claims every crime is simply “a song with poor timing.”</p><p class="quote">“I heard nothing at midnight. Which is strange, because I hear everything.”</p><p class="traits"><span>Hair: Brown</span> · <span>Eyes: Blue</span> · <span>Height: 171 cm</span></p></div></details>
+              <details class="card"><summary><div class="emoji">🐚</div><div class="type">Suspect</div><h3>Countess Bianca Bellafiore</h3><p class="front-note">Widow. Villa owner. Rumor collector.</p><span class="tap">Tap to inspect</span></summary><div class="card-detail"><p>A wealthy widow who owns half the villas on the lake and all of the town's most dangerous rumors.</p><p class="quote">“People call it stealing when they lack imagination.”</p><p class="traits"><span>Hair: Silver</span> · <span>Eyes: Hazel</span> · <span>Height: 162 cm</span></p></div></details>
+            </div>
+          </div>
+        </details>
+
+        <details class="section">
+          <summary><h2 class="summary-title">The Methods</h2><span class="chev">›</span></summary>
+          <div class="section-body">
+             <div class="section-body">
+            <div class="card-grid">
+              <details class="card"><summary><div class="emoji">🪢</div><div class="type">Method</div><h3>The Silk Rope Pulley</h3><p class="front-note">Quiet, clever, and annoyingly plausible.</p><span class="tap">Tap to inspect</span></summary><div class="card-detail"><p>The thief used a hidden pulley and a length of festival silk rope to lower the bell without making it ring.</p><p class="traits"><span>Red silk</span> · <span>frayed end</span> · <span>lantern fibers</span></p></div></details>
+              <details class="card"><summary><div class="emoji">📦</div><div class="type">Method</div><h3>The False Bottom Crate</h3><p class="front-note">Festival supplies, now with crime storage.</p><span class="tap">Tap to inspect</span></summary><div class="card-detail"><p>The thief slipped the bell into a festival supply crate with a hidden compartment beneath candles and paper lanterns.</p><p class="traits"><span>Fresh sawdust</span> · <span>split wood</span> · <span>candle wax</span></p></div></details>
+              <details class="card"><summary><div class="emoji">🪝</div><div class="type">Method</div><h3>The Gondola Hook</h3><p class="front-note">For boats, bells, and bad decisions.</p><span class="tap">Tap to inspect</span></summary><div class="card-detail"><p>The thief used a long boat hook to pull the bell through the tower window and carry it away by water.</p><p class="traits"><span>Silver scratches</span> · <span>lake water</span> · <span>dark varnish</span></p></div></details>
+            </div>
+          </div>
+        </details>
+
+        <details class="section">
+          <summary><h2 class="summary-title">The Locations</h2><span class="chev">›</span></summary>
+          <div class="section-body">
+            <p class="section-intro">Click each room to inspect the scene.</p>
+            <div class="card-grid">
+               <details class="card"><summary><div class="emoji">🛶</div><div class="type">Location</div><h3>The Lantern Dock</h3><p class="front-note">Red lanterns. Slick ropes. Nervous boats.</p><span class="tap">Tap to inspect</span></summary><div class="card-detail"><p>A wooden dock lined with red festival lanterns, bobbing boats, and ropes slick with lake mist.</p><p class="traits"><span>Hiding spot:</span> Beneath the dock stairs, inside a covered lantern trunk.</p></div></details>
+              <details class="card"><summary><div class="emoji">🍋</div><div class="type">Location</div><h3>The Lemon Grove Courtyard</h3><p class="front-note">Very pretty. Deeply suspicious.</p><span class="tap">Tap to inspect</span></summary><div class="card-detail"><p>A walled courtyard behind the old inn, fragrant with lemon trees, wet stone, and secrets whispered after dinner.</p><p class="traits"><span>Hiding spot:</span> Beneath a cracked terracotta planter.</p></div></details>
+              <details class="card"><summary><div class="emoji">🕯️</div><div class="type">Location</div><h3>The Chapel Crypt</h3><p class="front-note">Cold stone and judgmental silence.</p><span class="tap">Tap to inspect</span></summary><div class="card-detail"><p>A cool stone chamber beneath the chapel, filled with old candles, carved saints, and the kind of silence that feels personal.</p><p class="traits"><span>Hiding spot:</span> Behind a loose stone near Saint Aurelia's shrine.</p></div></details>
+            </div>
+          </div>
+        </details>
+
+        <section class="section" id="evidenceSection">
+          <h2>Unlock the Evidence</h2>
+          <div class="unlock-panel" id="unlockPanel">
+            <h3>ClueGPT Assistant Check</h3>
+            <p class="unlock-complete" id="unlockComplete">ClueGPT has finished sorting the evidence. The question cards are collapsed so you can investigate without the paperwork avalanche.</p>
+            <p class="unlock-copy">Detective Cluewell asks <strong>ClueGPT</strong>, their trusted assistant, to help organize the case notes before the real investigation begins. Answer carefully: each correct answer unlocks two clues. Each wrong answer permanently locks that pair.</p>
+            <p class="unlock-copy"><strong>You can still make an accusation even if clues are locked.</strong> Bellacqua respects confidence, even when it is wildly misplaced.</p>
+            <button class="unlock-toggle" id="unlockToggle" type="button" aria-expanded="false">Show ClueGPT questions</button>
+            <div class="challenge-grid" aria-label="Clue unlock questions">
+              <div class="challenge-card" data-challenge="0">
+                <h4>Question 1</h4>
+                <p>Cluewell has messy notes about where each object was found. What should they ask ClueGPT?</p>
+                <div class="answer-list">
+                  <button class="answer-btn" type="button" data-choice="wrong">Tell me who stole the bell.</button>
+                  <button class="answer-btn" type="button" data-choice="wrong">Make these notes sound more mysterious.</button>
+                  <button class="answer-btn" type="button" data-choice="correct">Organize these notes into a table by method, location, and evidence. Flag anything that does not fit.</button>
+                </div>
+                <div class="challenge-status pending" aria-live="polite">Clues 1-2 locked.</div>
+              </div>
+              <div class="challenge-card" data-challenge="1">
+                <h4>Question 2</h4>
+                <p>Witness statements are scattered across several accounts. What would help Cluewell compare them?</p>
+                <div class="answer-list">
+                  <button class="answer-btn" type="button" data-choice="wrong">Rewrite the witness statements to sound more confident.</button>
+                  <button class="answer-btn" type="button" data-choice="correct">Compare these witness statements and pull out concrete details about each suspect, including fears, physical traits, and contradictions.</button>
+                  <button class="answer-btn" type="button" data-choice="wrong">Make a fun poem about the suspects.</button>
+                </div>
+                <div class="challenge-status pending" aria-live="polite">Clues 3-4 locked.</div>
+              </div>
+              <div class="challenge-card" data-challenge="2">
+                <h4>Question 3</h4>
+                <p>Now the detective needs to eliminate possibilities on the board. What prompt best supports deduction?</p>
+                <div class="answer-list">
+                  <button class="answer-btn" type="button" data-choice="correct">Create a deduction table showing which suspects can be ruled out for each method and hiding place. Explain each elimination using only the evidence provided.</button>
+                  <button class="answer-btn" type="button" data-choice="wrong">Pick the most suspicious person based on vibes.</button>
+                  <button class="answer-btn" type="button" data-choice="wrong">Make the ending more dramatic.</button>
+                </div>
+                <div class="challenge-status pending" aria-live="polite">Clues 5-6 locked.</div>
+              </div>
+            </div>
+          </div>
+
+          <h2>Clues & Evidence</h2>
+          <div class="clue-board">
+            <div>
+              <p class="clue-hint" id="clueHint">Answer the ClueGPT questions above to unlock the evidence. Click an unlocked clue to cross it off once you have used it.</p>
+              <ol class="clues">
+                <li class="locked" data-pair="0"><span class="locked-label">Locked clue.</span> Answer Question 1 to reveal this evidence.</li>
+                <li class="locked" data-pair="0"><span class="locked-label">Locked clue.</span> Answer Question 1 to reveal this evidence.</li>
+                <li class="locked" data-pair="1"><span class="locked-label">Locked clue.</span> Answer Question 2 to reveal this evidence.</li>
+                <li class="locked" data-pair="1"><span class="locked-label">Locked clue.</span> Answer Question 2 to reveal this evidence.</li>
+                <li class="locked" data-pair="2"><span class="locked-label">Locked clue.</span> Answer Question 3 to reveal this evidence.</li>
+                <li class="locked" data-pair="2"><span class="locked-label">Locked clue.</span> Answer Question 3 to reveal this evidence.</li>
+              </ol>
+            </div>
+            <div class="board" aria-label="Deduction board">
+              <div class="board-title">Detective Board</div>
+              <div class="timer" aria-label="Puzzle timer">
+                <div class="timer-label">Case Timer</div><span id="timer">00:00</span>
+              </div>
+              <div class="deduction" id="deductionGrid" aria-label="Interactive deduction grid">
+                <div class="group g-sus">Suspects</div><div class="group g-loc">Hiding Places</div>
+                <div class="topicon" style="grid-column:2" title="Signora Violetta Vale">🎭</div><div class="topicon" style="grid-column:3" title="Matteo Marlowe">🎻</div><div class="topicon" style="grid-column:4" title="Countess Bianca Bellafiore">🐚</div>
+                <div class="topicon" style="grid-column:5" title="The Lantern Dock">🛶</div><div class="topicon" style="grid-column:6" title="The Lemon Grove Courtyard">🍋</div><div class="topicon" style="grid-column:7" title="The Chapel Crypt">🕯️</div>
+                <div class="sidegroup sg-method">Methods</div><div class="sideicon" style="grid-row:3" title="The Silk Rope Pulley">🪢</div><div class="sideicon" style="grid-row:4" title="The False Bottom Crate">📦</div><div class="sideicon" style="grid-row:5" title="The Gondola Hook">🪝</div>
+                <div class="sidegroup sg-loc">Hiding Places</div><div class="sideicon" style="grid-row:6" title="The Lantern Dock">🛶</div><div class="sideicon" style="grid-row:7" title="The Lemon Grove Courtyard">🍋</div><div class="sideicon" style="grid-row:8" title="The Chapel Crypt">🕯️</div>
+              </div>
+              <div class="board-actions"><button id="clearBoard" class="mini-btn" type="button">Clear Board</button></div>
+              <div class="legend"><div><strong>Suspects:</strong><ul><li>🎭 Violetta</li><li>🎻 Matteo</li><li>🐚 Bianca</li></ul></div><div><strong>Methods:</strong><ul><li>🪢 Rope</li><li>📦 Crate</li><li>🪝 Hook</li></ul></div><div><strong>Locations:</strong><ul><li>🛶 Dock</li><li>🍋 Grove</li><li>🕯️ Crypt</li></ul></div></div>
+            </div>
+          </div>
+        </section>
+
+        <div id="preAccuseActions" class="menu-retreat-section">
+          <p>Need to retreat to the case files before making an accusation?</p>
+          <a class="secondary-link" href="index.html">Back to Case Menu</a>
+        </div>
+
+        <section class="section accusation">
+          <h2>Make Your Accusation</h2>
+          <p>Choose carefully. Bellacqua has very judgmental water.</p>
+          <div class="form-grid">
+            <div><label for="suspect">Who stole the bell?</label><select id="suspect"><option value="">Select a suspect...</option><option>Signora Violetta Vale</option><option>Matteo Marlowe</option><option>Countess Bianca Bellafiore</option></select></div>
+            <div><label for="method">How did they do it?</label><select id="method"><option value="">Select a method...</option><option>The Silk Rope Pulley</option><option>The False Bottom Crate</option><option>The Gondola Hook</option></select></div>
+            <div><label for="location">Where is it hidden?</label><select id="location"><option value="">Select a hiding place...</option><option>The Lantern Dock</option><option>The Lemon Grove Courtyard</option><option>The Chapel Crypt</option></select></div>
+          </div>
+          <button id="checkBtn" type="button" class="primary">Submit Accusation</button>
+          <div id="result" class="result" aria-live="polite"></div>
+          <div id="shareBox" class="share-box" aria-live="polite">
+            <strong>Your result:</strong>
+            <div id="tierResult" class="tier-result">
+              <h3 id="tierName">Case Closed</h3>
+              <p class="tier-time"><strong id="tierNameLine">Case Closed</strong> solved in <span id="tierTime">00:00</span>.</p>
+              <p id="tierMessage">Detective Cluewell is reviewing the evidence.</p>
+            </div>
+            <p id="shareText" class="share-copy-only" aria-hidden="true">I solved the case. Can you solve the case?</p>
+            <button id="copyResults" type="button" class="copy-btn">Copy My Results</button>
+          </div>
+        </section>
+
+        <section id="solution" class="solution">
+         <h2>Case Closed</h2>
+          <p>The lake shimmered. The lanterns swayed. And Detective Cluewell finally saw the pattern.</p>
+          <p><strong>Signora Violetta Vale stole the Saint's Silver Bell using the False Bottom Crate and hid it at the Lantern Dock.</strong></p>
+          <p>The hidden ClueGPT skill in this case is <strong>organizing messy evidence into a usable structure</strong>. The clues only become obvious once you compare suspects, methods, hiding places, traits, and physical evidence side by side.</p>
+          <div class="prompt-box">
+            <p><strong>Try this at work:</strong></p>
+            <p>“Here are notes from three meetings and two emails. Please organize the information by theme, identify repeated concerns, flag contradictions, and suggest what follow-up questions we should ask.”</p>
+          </div>
+          <p><strong>AI lesson:</strong> When information feels scattered, do not just ask ChatGPT for an answer. Ask it to help you organize the evidence so the pattern can reveal itself.</p>
+         </section>
+      </main>
+    </article>
+    <p class="footer-note">ClueGPT · Episode 1 · Who Stole the Silver Bell?</p>
+  </div>
+  <audio id="bgMusic" loop preload="auto" src="leberch-detective-documentary-313738.mp3"></audio>
+  <script>
+    const correct={suspect:"Signora Violetta Vale",method:"The False Bottom Crate",location:"The Lantern Dock"};
+    const grid=document.getElementById('deductionGrid');
+    const boardCells=[];
+
+    const clueTexts=[
+      'The False Bottom Crate was not taken to the Lemon Grove Courtyard. Apparently even smugglers have standards about citrus storage.',
+      'The Gondola Hook was found with melted candle wax on its metal tip.',
+      'Matteo Marlowe has aquaphobia, which is inconvenient for a man living in a lakeside town and deeply suspicious for everyone else.',
+      'The person with green eyes used a method involving a hidden compartment.',
+      'The Silk Rope Pulley was used by the shortest suspect.',
+      'Witnesses swear the thief had dark hair.'
+    ];
+    const challengeStates=[null,null,null];
+    const clueItems=[...document.querySelectorAll('.clues li')];
+
+    function enableClueToggle(clue){
+      clue.setAttribute('role','button');
+      clue.setAttribute('tabindex','0');
+      clue.setAttribute('aria-pressed','false');
+      const toggle=()=>{
+        if(clue.classList.contains('locked') || clue.classList.contains('hard-locked')) return;
+        const active=clue.classList.toggle('used');
+        clue.setAttribute('aria-pressed', active ? 'true' : 'false');
+      };
+      clue.addEventListener('click',toggle);
+      clue.addEventListener('keydown',(e)=>{
+        if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}
+      });
+    }
+    clueItems.forEach(enableClueToggle);
+
+    function startCaseTimer(){
+      if(!started){
+        started=true;
+        timer.textContent=fmt(elapsed);
+      }
+    }
+
+    function maybeStartAfterChallenges(){
+      if(challengeStates.every((state)=>state!==null)){
+        startCaseTimer();
+        const unlocked=challengeStates.filter(Boolean).length*2;
+        const clueWord=unlocked===1?'clue':'clues';
+        const clueHint=document.getElementById('clueHint');
+        if(clueHint){
+          clueHint.textContent=`ClueGPT has processed the case notes. ${unlocked} ${clueWord} unlocked.`;
+        }
+        const unlockPanel=document.getElementById('unlockPanel');
+        const unlockToggle=document.getElementById('unlockToggle');
+        if(unlockPanel && unlockToggle){
+          unlockPanel.classList.add('complete','collapsed');
+          unlockToggle.textContent='Show ClueGPT questions';
+          unlockToggle.setAttribute('aria-expanded','false');
+        }
+      }
+    }
+
+    function resolveChallenge(card, isCorrect){
+      const index=Number(card.dataset.challenge);
+      if(challengeStates[index]!==null) return;
+      challengeStates[index]=isCorrect;
+      const buttons=[...card.querySelectorAll('.answer-btn')];
+      const status=card.querySelector('.challenge-status');
+      buttons.forEach((button)=>{
+        button.disabled=true;
+        if(button.dataset.choice==='correct') button.classList.add('correct-choice');
+      });
+      const clicked=document.activeElement;
+      if(!isCorrect && clicked && clicked.classList && clicked.classList.contains('answer-btn')) clicked.classList.add('wrong-choice');
+      const pairClues=clueItems.filter((clue)=>clue.dataset.pair===String(index));
+      if(isCorrect){
+        pairClues.forEach((clue)=>{
+          const clueIndex=clueItems.indexOf(clue);
+          clue.textContent=clueTexts[clueIndex];
+          clue.classList.remove('locked','hard-locked');
+          clue.classList.remove('used');
+          clue.setAttribute('aria-pressed','false');
+          clue.setAttribute('tabindex','0');
+        });
+        status.className='challenge-status good';
+        status.textContent=`Unlocked clues ${index*2+1}-${index*2+2}. The evidence stops behaving like wet spaghetti.`;
+      }else{
+        pairClues.forEach((clue)=>{
+          clue.innerHTML='<span class="locked-label">Clues locked.</span> The evidence remains classified under “tragic formatting choices.”';
+          clue.classList.remove('locked','used');
+          clue.classList.add('hard-locked');
+          clue.removeAttribute('role');
+          clue.removeAttribute('tabindex');
+          clue.setAttribute('aria-pressed','false');
+        });
+        status.className='challenge-status bad';
+        status.textContent=`Clues ${index*2+1}-${index*2+2} are hard locked. ClueGPT cannot save evidence from that prompt.`;
+      }
+      maybeStartAfterChallenges();
+    }
+
+    document.querySelectorAll('.challenge-card').forEach((card)=>{
+      card.querySelectorAll('.answer-btn').forEach((button)=>{
+        button.addEventListener('click',()=>resolveChallenge(card, button.dataset.choice==='correct'));
+      });
+    });
+
+    const unlockToggle=document.getElementById('unlockToggle');
+    const unlockPanel=document.getElementById('unlockPanel');
+    if(unlockToggle && unlockPanel){
+      unlockToggle.addEventListener('click',()=>{
+        const collapsed=unlockPanel.classList.toggle('collapsed');
+        unlockToggle.textContent=collapsed?'Show ClueGPT questions':'Hide ClueGPT questions';
+        unlockToggle.setAttribute('aria-expanded', String(!collapsed));
+      });
+    }
+
+    function clearCellVisual(cell){
+      cell.dataset.state='blank';
+      cell.dataset.auto='false';
+      cell.textContent='';
+      cell.classList.remove('auto-marked');
+      cell.setAttribute('aria-label',`${cell.dataset.rowName || 'Row'} vs ${cell.dataset.colName || 'Column'}: blank`);
+    }
+
+    function setCellState(cell,state,automatic=false){
+      if(!cell || cell.dataset.locked==='true') return;
+      cell.dataset.state=state;
+      cell.dataset.auto=automatic ? 'true' : 'false';
+      cell.textContent=state==='x'?'✕':state==='check'?'✓':'';
+      cell.classList.toggle('auto-marked', !!automatic && state==='x');
+      cell.setAttribute('aria-label',`${cell.dataset.rowName || 'Row'} vs ${cell.dataset.colName || 'Column'}: ${state==='blank'?'blank':state==='x'?(automatic?'automatically ruled out':'ruled out'):(automatic?'automatically confirmed':'confirmed')}`);
+    }
+
+    function blockCells(block){return boardCells.filter(c=>c.dataset.block===block)}
+    function rowCells(block,row){return blockCells(block).filter(c=>c.dataset.r===String(row))}
+    function colCells(block,col){return blockCells(block).filter(c=>c.dataset.c===String(col))}
+
+    function setAutoState(cell,state){
+      if(cell.dataset.state==='blank' || cell.dataset.auto==='true') setCellState(cell,state,true);
+    }
+
+    function clearConflictingChecks(cell){
+      const block=cell.dataset.block, row=cell.dataset.r, col=cell.dataset.c;
+      [...rowCells(block,row),...colCells(block,col)].forEach(c=>{
+        if(c!==cell && c.dataset.state==='check') clearCellVisual(c);
+      });
+    }
+
+    function recalculateBoard(){
+      boardCells.forEach(c=>{ if(c.dataset.auto==='true') clearCellVisual(c); });
+      let changed=true, guard=0;
+      while(changed && guard<12){
+        changed=false; guard++;
+        boardCells.filter(c=>c.dataset.state==='check').forEach(cell=>{
+          const block=cell.dataset.block, row=cell.dataset.r, col=cell.dataset.c;
+          [...rowCells(block,row),...colCells(block,col)].forEach(c=>{
+            if(c!==cell && c.dataset.state==='blank'){
+              setAutoState(c,'x'); changed=true;
+            }
+          });
+        });
+        [...new Set(boardCells.map(c=>c.dataset.block))].forEach(block=>{
+          const cells=blockCells(block);
+          const rows=[...new Set(cells.map(c=>c.dataset.r))];
+          const cols=[...new Set(cells.map(c=>c.dataset.c))];
+          rows.forEach(row=>{
+            const rowSet=rowCells(block,row);
+            if(rowSet.some(c=>c.dataset.state==='check')) return;
+            const candidates=rowSet.filter(c=>c.dataset.state!=='x');
+            if(candidates.length===1){setCellState(candidates[0],'check',true); changed=true;}
+          });
+          cols.forEach(col=>{
+            const colSet=colCells(block,col);
+            if(colSet.some(c=>c.dataset.state==='check')) return;
+            const candidates=colSet.filter(c=>c.dataset.state!=='x');
+            if(candidates.length===1){setCellState(candidates[0],'check',true); changed=true;}
+          });
+        });
+      }
+    }
+
+    function addCell(r,c,cls='',block='',rowIndex='',colIndex='',rowName='',colName=''){
+      const b=document.createElement('button');
+      b.type='button'; b.className=('cell '+cls).trim();
+      b.style.gridRow=r; b.style.gridColumn=c;
+      b.dataset.state='blank'; b.dataset.auto='false'; b.dataset.block=block; b.dataset.r=rowIndex; b.dataset.c=colIndex;
+      b.dataset.rowName=rowName; b.dataset.colName=colName;
+      b.setAttribute('aria-label',`${rowName} vs ${colName}: blank`);
+      b.addEventListener('click',()=>{
+        boardInteractions++;
+        const s=b.dataset.state;
+        if(s==='blank'){
+          setCellState(b,'x',false);
+        } else if(s==='x'){
+          clearConflictingChecks(b);
+          setCellState(b,'check',false);
+        } else {
+          clearCellVisual(b);
+        }
+        recalculateBoard();
+      });
+      grid.appendChild(b); boardCells.push(b);
+    }
+
+    const methodNames=['The Silk Rope Pulley','The False Bottom Crate','The Gondola Hook'];
+    const suspectNames=['Signora Violetta Vale','Matteo Marlowe','Countess Bianca Bellafiore'];
+    const locationNames=['The Lantern Dock','The Lemon Grove Courtyard','The Chapel Crypt'];
+
+    for(let r=3;r<=5;r++){
+      for(let c=2;c<=4;c++){
+        addCell(r,c,[(c===2?'block-l':''),(c===4?'block-r':''),(r===3?'block-t':''),(r===5?'block-b':'')].filter(Boolean).join(' '),'method-suspect',r-3,c-2,methodNames[r-3],suspectNames[c-2]);
+      }
+      for(let c=5;c<=7;c++){
+        addCell(r,c,[(c===5?'block-l':''),(c===7?'block-r':''),(r===3?'block-t':''),(r===5?'block-b':'')].filter(Boolean).join(' '),'method-location',r-3,c-5,methodNames[r-3],locationNames[c-5]);
+      }
+    }
+    for(let r=6;r<=8;r++){
+      for(let c=2;c<=4;c++){
+        addCell(r,c,[(c===2?'block-l':''),(c===4?'block-r':''),(r===6?'block-t':''),(r===8?'block-b':'')].filter(Boolean).join(' '),'location-suspect',r-6,c-2,locationNames[r-6],suspectNames[c-2]);
+      }
+    }
+
+    document.getElementById('clearBoard').addEventListener('click',()=>{
+      boardCells.forEach(clearCellVisual);
+    });
+
+    let elapsed=0, solved=false;
+    let boardInteractions=0, accusationAttempts=0;
+    const timer=document.getElementById('timer');
+    const SHARE_LINK='https://pncaiteam-scan.github.io/ClueGPT/';
+    function fmt(n){return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')}
+    function fmtWords(n){const min=Math.floor(n/60),sec=n%60; const minText=min===1?'1 minute':min+' minutes'; const secText=sec===1?'1 second':sec+' seconds'; return minText+' and '+secText}
+    function getTier(n){
+      if(n<180){return {name:'Master Detective', message:'You solved it before the lanterns finished flickering. Detective Cluewell would absolutely pretend not to be impressed.'};}
+      if(n<360){return {name:'Sharp-Eyed Sleuth', message:'A clean solve. You read the town, followed the clues, and brought the Saint’s Silver Bell home before the festival candles melted.'};}
+      if(n<540){return {name:'Determined Investigator', message:'You took the scenic route through Bellacqua, but the evidence held up and the culprit was caught.'};}
+      return {name:'Haunted by the Evidence', message:'The lake fought back, the clues got weird, and the board filled with Xs — but you still closed the case. The bell can finally ring again.'};
+    }
+    function recordEpisodeSolve(seconds, tierName, details={}){
+      const key='cluegptPlayerStatsV1';
+      const episodeId='episode1';
+      const title='The Whispering Waters of Bellacqua';
+      let stats;
+      try{
+        stats=JSON.parse(localStorage.getItem(key)||'{}');
+      }catch(e){
+        stats={};
+      }
+      if(!stats.cases || typeof stats.cases!=='object') stats.cases={};
+      const existing=stats.cases[episodeId]||{};
+      const previousBest=typeof existing.bestTimeSeconds==='number'?existing.bestTimeSeconds:null;
+      stats.cases[episodeId]={
+        id:episodeId,
+        episodeNumber:1,
+        title:title,
+        solved:true,
+        solvedCount:Number(existing.solvedCount||0)+1,
+        latestTimeSeconds:seconds,
+        bestTimeSeconds:previousBest===null?seconds:Math.min(previousBest,seconds),
+        latestTier:tierName,
+        lastSolvedAt:new Date().toISOString(),
+        attempts: details.attempts,
+        firstTry: details.firstTry,
+        boardMarks: details.boardMarks,
+        allCluesCrossed: details.allCluesCrossed
+      };
+      localStorage.setItem(key,JSON.stringify(stats));
+    }
+    let started=true;
+    setInterval(()=>{if(started && !solved){elapsed++;timer.textContent=fmt(elapsed)}},1000);
+
+    const music=document.getElementById('bgMusic');
+    const musicToggle=document.getElementById('musicToggle');
+    const volumeSlider=document.getElementById('volumeSlider');
+    music.volume=parseFloat(volumeSlider.value);
+
+    async function startMusic(){
+      try{
+        await music.play();
+        musicToggle.textContent='Music Off';
+        musicToggle.setAttribute('aria-pressed','true');
+      }catch(e){
+        musicToggle.textContent='Music On';
+        musicToggle.setAttribute('aria-pressed','false');
+      }
+    }
+
+    // Start music on load if the browser allows it; the case timer starts when the page opens.
+    startMusic();
+    document.addEventListener('click',()=>{ if(music.paused){ startMusic(); } }, {once:true});
+
+    musicToggle.addEventListener('click',async()=>{
+      if(music.paused){
+        musicToggle.setAttribute('aria-pressed','true');
+        await startMusic();
+      }else{
+        music.pause(); musicToggle.textContent='Music On'; musicToggle.setAttribute('aria-pressed','false');
+      }
+    });
+    volumeSlider.addEventListener('input',()=>{music.volume=parseFloat(volumeSlider.value)});
+
+    document.getElementById('copyResults').addEventListener('click',async()=>{
+      const text=document.getElementById('shareText').textContent;
+      try{
+        await navigator.clipboard.writeText(text);
+        document.getElementById('copyResults').textContent='Copied!';
+        setTimeout(()=>document.getElementById('copyResults').textContent='Copy My Results',1500);
+      }catch(e){
+        const box=document.createElement('textarea'); box.value=text; document.body.appendChild(box); box.select(); document.execCommand('copy'); document.body.removeChild(box);
+        document.getElementById('copyResults').textContent='Copied!';
+        setTimeout(()=>document.getElementById('copyResults').textContent='Copy My Results',1500);
+      }
+    });
+
+
+
+    const accusationSelects=[document.getElementById('suspect'),document.getElementById('method'),document.getElementById('location')];
+    const preAccuseActions=document.getElementById('preAccuseActions');
+    function updatePreAccuseActions(){
+      const hasSelection=accusationSelects.some((select)=>select.value);
+      if(preAccuseActions){preAccuseActions.classList.toggle('hidden',hasSelection);}
+    }
+    accusationSelects.forEach((select)=>select.addEventListener('change',updatePreAccuseActions));
+    updatePreAccuseActions();
+
+    document.getElementById('checkBtn').addEventListener('click',()=>{
+      const s=document.getElementById('suspect').value,m=document.getElementById('method').value,l=document.getElementById('location').value,res=document.getElementById('result'),sol=document.getElementById('solution'),share=document.getElementById('shareBox'),shareText=document.getElementById('shareText');
+      res.className='result show';
+      accusationAttempts++;
+      if(!s||!m||!l){res.classList.add('bad');res.textContent='Detective Cluewell needs all three parts of the accusation: who, how, and where.';return}
+      if(s===correct.suspect&&m===correct.method&&l===correct.location){
+        const firstSolve=!solved;
+        solved=true;
+        const finalTime=fmt(elapsed);
+        const tier=getTier(elapsed);
+        const allCluesCrossed=[...document.querySelectorAll('.clues li')].every((clue)=>clue.classList.contains('used'));
+        if(firstSolve){recordEpisodeSolve(elapsed,tier.name,{attempts:accusationAttempts,firstTry:accusationAttempts===1,boardMarks:boardInteractions,allCluesCrossed});}
+        res.classList.add('good');res.textContent='Correct. The lake is impressed.';
+        document.getElementById('tierName').textContent=tier.name;
+        document.getElementById('tierNameLine').textContent=tier.name;
+        document.getElementById('tierTime').textContent=finalTime;
+        document.getElementById('tierMessage').textContent=tier.message;
+        shareText.textContent=`I solved "ClueGPT Episode One: Who Stole the Silver Bell?" in ${fmtWords(elapsed)}. Think you can solve the case faster? Try it yourself: ${SHARE_LINK}`;
+        share.classList.add('show');
+        sol.style.display='block';sol.scrollIntoView({behavior:'smooth',block:'start'});
+      }
+      else{res.classList.add('bad');res.textContent='Not quite. Somewhere in Bellacqua, a bell remains suspiciously silent.';}
+    });
+  </script>
+</body>
+</html>
